@@ -1,6 +1,9 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
 
+import 'maps/cave_map.dart';
+import 'maps/crypt_map.dart';
+
 const double tileSize = 32;
 
 void main() {
@@ -27,54 +30,111 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class GamePage extends StatelessWidget {
+/// The playable levels, in order. Each entry pairs a display name with the
+/// function that builds that level's [WorldMap].
+final _levels = <({String name, WorldMap Function() build})>[
+  (name: 'The Sunken Cave', build: buildCaveMap),
+  (name: 'The Bone Crypt', build: buildCryptMap),
+];
+
+class GamePage extends StatefulWidget {
   const GamePage({super.key});
 
   @override
+  State<GamePage> createState() => _GamePageState();
+}
+
+class _GamePageState extends State<GamePage> {
+  int _levelIndex = 0;
+
+  void _nextLevel() {
+    setState(() {
+      _levelIndex = (_levelIndex + 1) % _levels.length;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final level = _levels[_levelIndex];
+
     // Bonfire 4.x API — older docs used `joystick:` / `progress:` / a raw
     // path string for Tiled. Those were renamed or removed.
-    return BonfireWidget(
-      // required — swap to WorldMapByTiled when you have a Tiled map:
-      // map: WorldMapByTiled(WorldMapReader.fromAsset('tile/map.json')),
-      map: _buildMap(),
-      // was `joystick:` — now a list so you can combine controls
-      playerControllers: [
-        Joystick(directional: JoystickDirectional()),
-        Keyboard(
-          config: KeyboardConfig(
-            directionalKeys: [
-              KeyboardDirectionalKeys.arrows(),
-              KeyboardDirectionalKeys.wasd(),
-            ],
+    return Stack(
+      children: [
+        BonfireWidget(
+          // A fresh key forces Bonfire to fully rebuild the game (map,
+          // player position, camera) whenever the level changes, rather
+          // than trying to hot-swap the map inside a running instance.
+          key: ValueKey(_levelIndex),
+          // required — swap to WorldMapByTiled when you have a Tiled map:
+          // map: WorldMapByTiled(WorldMapReader.fromAsset('tile/map.json')),
+          map: level.build(),
+          // was `joystick:` — now a list so you can combine controls
+          playerControllers: [
+            Joystick(directional: JoystickDirectional()),
+            Keyboard(
+              config: KeyboardConfig(
+                directionalKeys: [
+                  KeyboardDirectionalKeys.arrows(),
+                  KeyboardDirectionalKeys.wasd(),
+                ],
+              ),
+            ),
+          ],
+          // If player is omitted, the directional controls the map camera
+          player: HeroPlayer(position: Vector2(tileSize * 2, tileSize * 2)),
+          // interface: KnightInterface(),
+          // background: MyParallaxBackground(), // extend GameBackground
+          backgroundColor: Colors.black,
+          debugMode: false,
+          showCollisionArea: false,
+          collisionAreaColor: Colors.blue,
+          lightingColorGame: Colors.black.withValues(alpha: 0.4),
+          colorFilter: GameColorFilter(),
+          components: const [],
+          // overlayBuilderMap: {
+          //   'barLife': (context, game) => const MyBarLifeWidget(),
+          // },
+          // initialActiveOverlays: ['barLife'],
+          cameraConfig: CameraConfig(
+            zoom: getZoomFromMaxVisibleTile(context, tileSize, 16),
+            moveOnlyMapArea: true,
+          ),
+          globalForces: GlobalForcesSettings(),
+          onReady: (game) {},
+          autofocus: true,
+          // mouseCursor: SystemMouseCursors.basic,
+          // `progress:` was removed in Bonfire 3+/4 — show your own loading
+          // UI while preparing assets if needed.
+        ),
+        // Minimal level-switch UI so both maps are reachable without wiring
+        // up Bonfire's Tiled-portal/multi-map-world features yet. Swap this
+        // for a real portal/stairs trigger once the crypt's `X` tile should
+        // actually send the player to the next level on contact.
+        SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  level.name,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    shadows: [Shadow(blurRadius: 4, color: Colors.black)],
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: _nextLevel,
+                  child: const Text('Next Level'),
+                ),
+              ],
+            ),
           ),
         ),
       ],
-      // If player is omitted, the directional controls the map camera
-      player: HeroPlayer(position: Vector2(tileSize * 2, tileSize * 2)),
-      // interface: KnightInterface(),
-      // background: MyParallaxBackground(), // extend GameBackground
-      backgroundColor: Colors.black,
-      debugMode: false,
-      showCollisionArea: false,
-      collisionAreaColor: Colors.blue,
-      lightingColorGame: Colors.black.withValues(alpha: 0.4),
-      colorFilter: GameColorFilter(),
-      components: const [],
-      // overlayBuilderMap: {
-      //   'barLife': (context, game) => const MyBarLifeWidget(),
-      // },
-      // initialActiveOverlays: ['barLife'],
-      cameraConfig: CameraConfig(
-        zoom: getZoomFromMaxVisibleTile(context, tileSize, 16),
-        moveOnlyMapArea: true,
-      ),
-      globalForces: GlobalForcesSettings(),
-      onReady: (game) {},
-      autofocus: true,
-      // mouseCursor: SystemMouseCursors.basic,
-      // `progress:` was removed in Bonfire 3+/4 — show your own loading UI
-      // while preparing assets if needed.
     );
   }
 }
@@ -106,41 +166,4 @@ class HeroPlayer extends Player with WithCollision {
       paint..color = const Color(0xFFE8C547),
     );
   }
-}
-
-WorldMap _buildMap() {
-  // 0 = floor, 1 = wall
-  const matrix = <List<double>>[
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1],
-    [1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-  ];
-
-  return MatrixMapGenerator.generate(
-    layers: [
-      MatrixLayer(matrix: matrix),
-    ],
-    builder: (properties) {
-      final isWall = properties.value == 1;
-      return Tile(
-        x: properties.position.x,
-        y: properties.position.y,
-        width: tileSize,
-        height: tileSize,
-        color: isWall
-            ? const Color(0xFF4A3728)
-            : const Color(0xFF2A2218),
-        collisions: isWall
-            ? [RectangleHitbox(size: Vector2.all(tileSize))]
-            : null,
-      );
-    },
-  );
 }
