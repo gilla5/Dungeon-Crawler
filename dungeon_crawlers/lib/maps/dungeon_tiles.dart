@@ -1,8 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:flutter/material.dart';
 
-/// Tile size shared by every map in the game. Kept in sync with the
-/// `tileSize` constant in main.dart (both are 32).
+/// Tile size shared by every map and the player in the game.
 const double kTileSize = 32;
 
 /// Every value that can appear in a map's matrix. Values are `double`
@@ -91,16 +89,18 @@ Tile buildDungeonTile(ItemMatrixProperties properties, DungeonPalette palette) {
   final isWall = value == DungeonTileValues.wall;
 
   final Color color;
-  if (value == DungeonTileValues.wall) {
-    color = palette.wall;
-  } else if (value == DungeonTileValues.hazard) {
-    color = palette.hazard;
-  } else if (value == DungeonTileValues.rubble) {
-    color = palette.rubble;
-  } else if (value == DungeonTileValues.stairs) {
-    color = palette.stairs;
-  } else {
-    color = palette.floor;
+  switch (value) {
+    case DungeonTileValues.wall:
+      color = palette.wall;
+    case DungeonTileValues.hazard:
+      color = palette.hazard;
+    case DungeonTileValues.rubble:
+      color = palette.rubble;
+    case DungeonTileValues.stairs:
+      color = palette.stairs;
+    default:
+      // Unknown values (and floor) render as floor so maps stay walkable.
+      color = palette.floor;
   }
 
   return Tile(

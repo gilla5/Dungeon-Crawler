@@ -1,5 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 
+import 'tiled_map_loader.dart';
+
 /// Level 3 - The Magma Forge.
 ///
 /// Loaded from a Tiled JSON map ([assets/images/magma.tmj]) instead of
@@ -7,12 +9,5 @@ import 'package:bonfire/bonfire.dart';
 /// forge pillars, ash piles, and stairs near the south wall.
 ///
 /// Bonfire resolves [WorldMapReader.fromAsset] under `assets/images/`, so
-/// the path is just `magma.tmj` (not `assets/images/magma.tmj`). The source
-/// tiles are 16×16; [forceTileSize] scales them to the game's 32px grid.
-WorldMap buildMagmaMap() {
-  return WorldMapByTiled(
-    WorldMapReader.fromAsset('magma.tmj'),
-    // Keep gameplay on the same 32px grid as Cave/Crypt and [tileSize].
-    forceTileSize: Vector2.all(32),
-  );
-}
+/// the path is just `magma.tmj` (not `assets/images/magma.tmj`).
+WorldMap buildMagmaMap() => buildTiledMap('magma.tmj');

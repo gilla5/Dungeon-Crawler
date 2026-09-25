@@ -65,14 +65,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.19.1"
-  cupertino_icons:
-    dependency: "direct main"
-    description:
-      name: cupertino_icons
-      sha256: "41e005c33bd814be4d3096aff55b1908d419fde52ca656c8c47719ec745873cd"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.9"
   fake_async:
     dependency: transitive
     description:
@@ -265,7 +257,7 @@ packages:
     source: hosted
     version: "0.7.12"
   tiledjsonreader:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: tiledjsonreader
       sha256: ca987348c2d82d2806311c137cc77bf9f83d2517697ee19d0d7a7b01531375b1

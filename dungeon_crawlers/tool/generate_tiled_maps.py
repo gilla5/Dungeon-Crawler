@@ -197,13 +197,21 @@ def layers_from_art(art: list[str], hazard_gid: int):
     and decor are separate layers so they can be tinted or wired to gameplay
     later without repainting the ground.
     """
-    h, w = len(art), len(art[0])
+    if not art:
+        raise ValueError("Map art must have at least one row")
+    w = len(art[0])
+    h = len(art)
     ground: list[int] = []
     walls: list[int] = []
     hazards: list[int] = []
     decor: list[int] = []
     stairs_obj = None
     for y, row in enumerate(art):
+        if len(row) != w:
+            raise ValueError(
+                f"Map art rows must all be the same length "
+                f'(expected {w}, got {len(row)} for "{row}")'
+            )
         for x, ch in enumerate(row):
             if ch == "#":
                 ground.append(FLOOR)

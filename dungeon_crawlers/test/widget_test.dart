@@ -1,4 +1,6 @@
-import 'package:dungeon_crawlers/main.dart';
+import 'package:dungeon_crawlers/app.dart';
+import 'package:dungeon_crawlers/game_page.dart';
+import 'package:dungeon_crawlers/maps/dungeon_tiles.dart';
 import 'package:dungeon_crawlers/maps/magma_map.dart';
 import 'package:dungeon_crawlers/maps/shadow_map.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -12,7 +14,7 @@ void main() {
   test('app and game page can be constructed', () {
     expect(const MyApp(), isA<MyApp>());
     expect(const GamePage(), isA<GamePage>());
-    expect(tileSize, 32);
+    expect(kTileSize, 32);
   });
 
   test('magma and shadow Tiled maps load with tilesets', () async {

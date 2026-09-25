@@ -1,17 +1,34 @@
 # dungeon_crawlers
 
-A new Flutter project.
+Flutter + [Bonfire](https://pub.dev/packages/bonfire) dungeon crawler with four
+levels: Cave and Crypt (ASCII → matrix tiles) plus Magma and Shadow (Tiled
+`.tmj` maps).
 
-## Getting Started
+## Run
 
-This project is a starting point for a Flutter application.
+```bash
+cd dungeon_crawlers
+flutter pub get
+flutter run
+```
 
-A few resources to get you started if this is your first Flutter project:
+## Analyze and test
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+```bash
+flutter analyze
+flutter test
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Regenerate Magma / Shadow Tiled maps
+
+Maps and filler tilesets are produced by a Python script (not used at runtime):
+
+```bash
+pip install -r tool/requirements.txt
+python tool/generate_tiled_maps.py
+```
+
+Outputs land under `assets/images/` (`magma.tmj`, `shadow.tmj`, and
+`tilesets/`). Bonfire resolves `WorldMapReader.fromAsset` paths relative to
+`assets/images/`, so map files sit next to `tilesets/` (not in nested folders)
+— Flutter's asset loader does not resolve `../` in Tiled tileset links.
