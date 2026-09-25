@@ -1,0 +1,242 @@
+{
+ "columns": 32,
+ "image": "dungeon_ii.png",
+ "imageheight": 512,
+ "imagewidth": 512,
+ "margin": 0,
+ "name": "dungeon_ii",
+ "spacing": 0,
+ "tilecount": 1024,
+ "tiledversion": "1.10.2",
+ "tileheight": 16,
+ "tilewidth": 16,
+ "type": "tileset",
+ "version": "1.10",
+ "tiles": [
+  {
+   "id": 1,
+   "objectgroup": {
+    "draworder": "index",
+    "name": "",
+    "objects": [
+     {
+      "height": 16,
+      "id": 1,
+      "name": "",
+      "rotation": 0,
+      "type": "",
+      "visible": true,
+      "width": 16,
+      "x": 0,
+      "y": 0
+     }
+    ],
+    "opacity": 1,
+    "type": "objectgroup",
+    "visible": true,
+    "x": 0,
+    "y": 0
+   }
+  },
+  {
+   "id": 2,
+   "objectgroup": {
+    "draworder": "index",
+    "name": "",
+    "objects": [
+     {
+      "height": 16,
+      "id": 1,
+      "name": "",
+      "rotation": 0,
+      "type": "",
+      "visible": true,
+      "width": 16,
+      "x": 0,
+      "y": 0
+     }
+    ],
+    "opacity": 1,
+    "type": "objectgroup",
+    "visible": true,
+    "x": 0,
+    "y": 0
+   }
+  },
+  {
+   "id": 3,
+   "objectgroup": {
+    "draworder": "index",
+    "name": "",
+    "objects": [
+     {
+      "height": 16,
+      "id": 1,
+      "name": "",
+      "rotation": 0,
+      "type": "",
+      "visible": true,
+      "width": 16,
+      "x": 0,
+      "y": 0
+     }
+    ],
+    "opacity": 1,
+    "type": "objectgroup",
+    "visible": true,
+    "x": 0,
+    "y": 0
+   }
+  },
+  {
+   "id": 33,
+   "objectgroup": {
+    "draworder": "index",
+    "name": "",
+    "objects": [
+     {
+      "height": 16,
+      "id": 1,
+      "name": "",
+      "rotation": 0,
+      "type": "",
+      "visible": true,
+      "width": 16,
+      "x": 0,
+      "y": 0
+     }
+    ],
+    "opacity": 1,
+    "type": "objectgroup",
+    "visible": true,
+    "x": 0,
+    "y": 0
+   }
+  },
+  {
+   "id": 34,
+   "objectgroup": {
+    "draworder": "index",
+    "name": "",
+    "objects": [
+     {
+      "height": 16,
+      "id": 1,
+      "name": "",
+      "rotation": 0,
+      "type": "",
+      "visible": true,
+      "width": 16,
+      "x": 0,
+      "y": 0
+     }
+    ],
+    "opacity": 1,
+    "type": "objectgroup",
+    "visible": true,
+    "x": 0,
+    "y": 0
+   }
+  },
+  {
+   "id": 35,
+   "objectgroup": {
+    "draworder": "index",
+    "name": "",
+    "objects": [
+     {
+      "height": 16,
+      "id": 1,
+      "name": "",
+      "rotation": 0,
+      "type": "",
+      "visible": true,
+      "width": 16,
+      "x": 0,
+      "y": 0
+     }
+    ],
+    "opacity": 1,
+    "type": "objectgroup",
+    "visible": true,
+    "x": 0,
+    "y": 0
+   }
+  },
+  {
+   "id": 36,
+   "objectgroup": {
+    "draworder": "index",
+    "name": "",
+    "objects": [
+     {
+      "height": 16,
+      "id": 1,
+      "name": "",
+      "rotation": 0,
+      "type": "",
+      "visible": true,
+      "width": 16,
+      "x": 0,
+      "y": 0
+     }
+    ],
+    "opacity": 1,
+    "type": "objectgroup",
+    "visible": true,
+    "x": 0,
+    "y": 0
+   }
+  },
+  {
+   "id": 37,
+   "objectgroup": {
+    "draworder": "index",
+    "name": "",
+    "objects": [
+     {
+      "height": 16,
+      "id": 1,
+      "name": "",
+      "rotation": 0,
+      "type": "",
+      "visible": true,
+      "width": 16,
+      "x": 0,
+      "y": 0
+     }
+    ],
+    "opacity": 1,
+    "type": "objectgroup",
+    "visible": true,
+    "x": 0,
+    "y": 0
+   }
+  },
+  {
+   "id": 38,
+   "objectgroup": {
+    "draworder": "index",
+    "name": "",
+    "objects": [
+     {
+      "height": 16,
+      "id": 1,
+      "name": "",
+      "rotation": 0,
+      "type": "",
+      "visible": true,
+      "width": 16,
+      "x": 0,
+      "y": 0
+     }
+    ],
+    "opacity": 1,
+    "type": "objectgroup",
+    "visible": true,
+    "x": 0,
+    "y": 0
+   }
+  }
+ ]
+}

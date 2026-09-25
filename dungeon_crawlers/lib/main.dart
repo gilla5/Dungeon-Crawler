@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'maps/cave_map.dart';
 import 'maps/crypt_map.dart';
+import 'maps/magma_map.dart';
+import 'maps/shadow_map.dart';
 
 const double tileSize = 32;
 
@@ -32,9 +34,12 @@ class MyApp extends StatelessWidget {
 
 /// The playable levels, in order. Each entry pairs a display name with the
 /// function that builds that level's [WorldMap].
+/// Cave / Crypt use [MatrixMapGenerator]; Magma / Shadow load Tiled `.tmj` maps.
 final _levels = <({String name, WorldMap Function() build})>[
   (name: 'The Sunken Cave', build: buildCaveMap),
   (name: 'The Bone Crypt', build: buildCryptMap),
+  (name: 'The Magma Forge', build: buildMagmaMap),
+  (name: 'The Shadow Temple', build: buildShadowMap),
 ];
 
 class GamePage extends StatefulWidget {
@@ -66,8 +71,8 @@ class _GamePageState extends State<GamePage> {
           // player position, camera) whenever the level changes, rather
           // than trying to hot-swap the map inside a running instance.
           key: ValueKey(_levelIndex),
-          // required — swap to WorldMapByTiled when you have a Tiled map:
-          // map: WorldMapByTiled(WorldMapReader.fromAsset('tile/map.json')),
+          // Cave/Crypt return MatrixMapGenerator maps; Magma/Shadow return
+          // WorldMapByTiled (see magma_map.dart / shadow_map.dart).
           map: level.build(),
           // was `joystick:` — now a list so you can combine controls
           playerControllers: [
@@ -142,19 +147,11 @@ class _GamePageState extends State<GamePage> {
 /// Simple colored stand-in player until sprites are added.
 class HeroPlayer extends Player with WithCollision {
   HeroPlayer({required super.position})
-      : super(
-          size: Vector2.all(tileSize * 0.8),
-          speed: tileSize * 3,
-        );
+    : super(size: Vector2.all(tileSize * 0.8), speed: tileSize * 3);
 
   @override
   Future<void> onLoad() async {
-    add(
-      RectangleHitbox(
-        size: size * 0.7,
-        position: size * 0.15,
-      ),
-    );
+    add(RectangleHitbox(size: size * 0.7, position: size * 0.15));
     return super.onLoad();
   }
 
