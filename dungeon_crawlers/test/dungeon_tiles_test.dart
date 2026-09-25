@@ -1,12 +1,11 @@
+// Unit tests for matrixFromArt (ASCII legend → numeric tile matrix).
 import 'package:dungeon_crawlers/maps/dungeon_tiles.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('matrixFromArt', () {
     test('maps legend symbols to tile values', () {
-      final matrix = matrixFromArt(const [
-        '#.~^,X',
-      ]);
+      final matrix = matrixFromArt(const ['#.~^,X']);
 
       expect(matrix, [
         [
@@ -25,10 +24,7 @@ void main() {
     });
 
     test('rejects unequal row lengths', () {
-      expect(
-        () => matrixFromArt(const ['##', '#']),
-        throwsArgumentError,
-      );
+      expect(() => matrixFromArt(const ['##', '#']), throwsArgumentError);
     });
 
     test('rejects unknown symbols', () {

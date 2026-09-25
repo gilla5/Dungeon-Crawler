@@ -5,6 +5,7 @@ import 'levels.dart';
 import 'maps/dungeon_tiles.dart';
 import 'player/hero_player.dart';
 
+/// Hosts the Bonfire game and a temporary overlay for cycling [levels].
 class GamePage extends StatefulWidget {
   const GamePage({super.key});
 
@@ -45,18 +46,23 @@ class _GamePageState extends State<GamePage> {
             ),
           ],
           // If player is omitted, the directional controls the map camera.
+          // Spawn is fixed at tile (2, 2) — open floor on every current map;
+          // not read from stairs/spawn markers yet.
           player: HeroPlayer(position: Vector2(kTileSize * 2, kTileSize * 2)),
           backgroundColor: Colors.black,
+          // Soft vignette so colored tiles read as "underground" without
+          // needing per-entity light sources yet.
           lightingColorGame: Colors.black.withValues(alpha: 0.4),
           cameraConfig: CameraConfig(
+            // Fit ~16 tiles across so a full 16-wide map fills the viewport.
             zoom: getZoomFromMaxVisibleTile(context, kTileSize, 16),
             moveOnlyMapArea: true,
           ),
         ),
-        // Minimal level-switch UI so both maps are reachable without wiring
-        // up Bonfire's Tiled-portal/multi-map-world features yet. Swap this
-        // for a real portal/stairs trigger once the crypt's `X` tile should
-        // actually send the player to the next level on contact.
+        // Temporary level-switch UI so all four levels are reachable without
+        // Bonfire portals / multi-map worlds yet. Replace with a real stairs
+        // trigger once ASCII `X` / Tiled `stairs` objects advance the level
+        // on contact.
         SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(12),

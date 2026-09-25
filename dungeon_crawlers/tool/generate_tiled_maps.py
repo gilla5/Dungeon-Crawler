@@ -25,6 +25,7 @@ import os
 
 from PIL import Image
 
+# Package root and Bonfire asset roots (maps live next to tilesets/; see module doc).
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 BASE = os.path.join(ROOT, "assets", "images")
 TILESETS = os.path.join(BASE, "tilesets")
@@ -196,6 +197,10 @@ def layers_from_art(art: list[str], hazard_gid: int):
     Walls always sit on floor so the brick tiles do not leave holes. Hazards
     and decor are separate layers so they can be tinted or wired to gameplay
     later without repainting the ground.
+
+    Returns (width, height, ground, walls, hazards, decor, stairs_obj) where
+    the four layer lists are row-major GIDs (0 = empty) and stairs_obj is a
+    Tiled object dict named "stairs", or None if no X in the art.
     """
     if not art:
         raise ValueError("Map art must have at least one row")
@@ -346,6 +351,7 @@ def write_map(path: str, art: list[str], hazard_gid: int) -> None:
 
 
 def main() -> None:
+    """Regenerate extras.png, both .tsj tilesets, and magma/shadow .tmj maps."""
     os.makedirs(TILESETS, exist_ok=True)
     write_extras_png()
     write_tilesets()

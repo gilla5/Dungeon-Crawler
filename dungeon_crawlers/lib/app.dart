@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'game_page.dart';
 
+/// Root Flutter widget: dark theme shell that opens [GamePage].
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

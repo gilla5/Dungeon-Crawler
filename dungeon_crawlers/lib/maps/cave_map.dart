@@ -31,6 +31,7 @@ const _cavePalette = DungeonPalette(
   stairs: Color(0xFFE8C547),
 );
 
+/// Builds the Sunken Cave [WorldMap] from [_caveArt] and [_cavePalette].
 WorldMap buildCaveMap() {
   return MatrixMapGenerator.generate(
     layers: [MatrixLayer(matrix: matrixFromArt(_caveArt))],

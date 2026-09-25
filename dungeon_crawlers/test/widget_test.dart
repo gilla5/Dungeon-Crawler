@@ -1,3 +1,5 @@
+// Smoke tests: app widgets construct, Magma/Shadow `.tmj` files parse, and
+// map builders return a WorldMap without loading tiles at build time.
 import 'package:dungeon_crawlers/app.dart';
 import 'package:dungeon_crawlers/game_page.dart';
 import 'package:dungeon_crawlers/maps/dungeon_tiles.dart';

@@ -31,6 +31,7 @@ const _cryptPalette = DungeonPalette(
   stairs: Color(0xFFA9D6C4),
 );
 
+/// Builds the Bone Crypt [WorldMap] from [_cryptArt] and [_cryptPalette].
 WorldMap buildCryptMap() {
   return MatrixMapGenerator.generate(
     layers: [MatrixLayer(matrix: matrixFromArt(_cryptArt))],

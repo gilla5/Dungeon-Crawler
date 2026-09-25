@@ -4,7 +4,7 @@ import 'tiled_map_loader.dart';
 
 /// Level 3 - The Magma Forge.
 ///
-/// Loaded from a Tiled JSON map ([assets/images/magma.tmj]) instead of
+/// Loaded from a Tiled JSON map (`assets/images/magma.tmj`) instead of
 /// [MatrixMapGenerator]. Layout matches the old ASCII art: lava channels,
 /// forge pillars, ash piles, and stairs near the south wall.
 ///

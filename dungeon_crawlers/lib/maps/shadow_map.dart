@@ -4,7 +4,7 @@ import 'tiled_map_loader.dart';
 
 /// Level 4 - The Shadow Temple.
 ///
-/// Loaded from a Tiled JSON map ([assets/images/shadow.tmj]) instead of
+/// Loaded from a Tiled JSON map (`assets/images/shadow.tmj`) instead of
 /// [MatrixMapGenerator]. Layout matches the old ASCII art: twin columns,
 /// void pits, rubble circles, and stairs near the north wall.
 ///
