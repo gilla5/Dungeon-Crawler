@@ -60,6 +60,10 @@ flutter:
 
   assets:
     - assets/images/player/
+    - assets/images/knight/
+    - assets/images/night_vault/
+    - assets/images/night_vault/props/
+    - assets/images/night_vault/traps/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
