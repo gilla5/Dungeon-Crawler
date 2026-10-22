@@ -1,6 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
 
+import 'maps/molten_depths_map.dart';
 import 'maps/night_vault_map.dart';
 import 'player/hero_player.dart';
 
@@ -40,6 +41,12 @@ final _levels = <({
     name: 'The Night Vault',
     build: buildNightVaultMap,
     spawnPosition: Vector2(24 * 25, 24 * 56), // Starting point in top-left room near upper bookcases
+    mapTileSize: 24,
+  ),
+  (
+    name: 'The Molten Depths',
+    build: buildMoltenDepthsMap,
+    spawnPosition: Vector2(24 * 46, 24 * 72), // Cooled Landing, the safe room at the south end
     mapTileSize: 24,
   ),
 ];
