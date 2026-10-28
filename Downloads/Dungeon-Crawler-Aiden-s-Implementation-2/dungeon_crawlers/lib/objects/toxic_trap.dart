@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:bonfire/bonfire.dart';
 import 'package:bonfire/map/util/map_assets_manager.dart';
 
@@ -13,6 +15,7 @@ class ToxicTrap extends GameDecoration with WithSensor<Player> {
 
   @override
   Future<void> onLoad() async {
+    paint.filterQuality = FilterQuality.none;
     await _setSafeSprite();
 
     sensor.setup(interval: 200);
