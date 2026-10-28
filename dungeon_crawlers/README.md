@@ -1,6 +1,18 @@
-# dungeon_crawlers
+# Dungeon Crawlers
 
-A new Flutter project.
+A Bonfire dungeon crawler with a themed start screen, map selection, and two
+playable dungeons: The Night Vault and The Molten Depths.
+
+## Run the game
+
+From this directory, run:
+
+```bash
+flutter pub get
+flutter run
+```
+
+The start screen provides access to the map selection and game settings.
 
 ## Getting Started
 

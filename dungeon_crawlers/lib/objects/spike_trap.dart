@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:bonfire/bonfire.dart';
 import 'package:bonfire/map/util/map_assets_manager.dart';
 
@@ -13,6 +15,7 @@ class SpikeTrap extends GameDecoration with WithSensor<Player> {
 
   @override
   Future<void> onLoad() async {
+    paint.filterQuality = FilterQuality.none;
     await _setSafeSprite();
 
     sensor.setup(interval: 200);
@@ -53,7 +56,7 @@ class SpikeTrap extends GameDecoration with WithSensor<Player> {
   Future<void> _setActiveSprite() async {
     final active = await MapAssetsManager.getFutureSprite(
       'night_vault/traps/Trap-Spikes-Floor.png',
-      position: Vector2(3, 0),
+      position: Vector2(72, 0),
       size: Vector2(24, 24),
     );
     sprite = active;
