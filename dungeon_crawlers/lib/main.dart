@@ -7,6 +7,7 @@ import 'maps/molten_depths_map.dart';
 import 'maps/night_vault_map.dart';
 import 'player/hero_player.dart';
 import 'player/playable_character.dart';
+import 'settings/game_settings.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -194,7 +195,7 @@ class MapSelectionScreen extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(24, 90, 24, 24),
               children: [
                 const Text(
-                  'SELECT A D',
+                  'SELECT A DUNGEON',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Color(0xFFE7D2A4),
@@ -277,9 +278,12 @@ class _CharacterSelectionScreenState extends State<CharacterSelectionScreen> {
               padding: const EdgeInsets.fromLTRB(16, 60, 16, 16),
               child: Column(
                 children: [
-                  // Dungeon Header
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  // Dungeon Responsive Header
+                  Wrap(
+                    alignment: WrapAlignment.spaceBetween,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 12,
+                    runSpacing: 8,
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -301,6 +305,7 @@ class _CharacterSelectionScreenState extends State<CharacterSelectionScreen> {
                           ],
                         ),
                         child: const Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
                               Icons.groups_2_outlined,
@@ -373,7 +378,7 @@ class _CharacterSelectionScreenState extends State<CharacterSelectionScreen> {
 
                   const SizedBox(height: 12),
 
-                  // Enter Dungeon Action Button
+                  // Enter Dungeon Action Button (FittedBox to prevent right overflow)
                   SizedBox(
                     width: double.infinity,
                     height: 56,
@@ -399,28 +404,31 @@ class _CharacterSelectionScreenState extends State<CharacterSelectionScreen> {
                           ),
                         ),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.local_fire_department_rounded,
-                            size: 28,
-                            color: Color(0xFFE7D2A4),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'ENTER THE DUNGEON (${selected.name.toUpperCase()})',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 2,
-                              color: Colors.white,
-                              shadows: [
-                                Shadow(blurRadius: 4, color: Colors.black),
-                              ],
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.local_fire_department_rounded,
+                              size: 26,
+                              color: Color(0xFFE7D2A4),
                             ),
-                          ),
-                        ],
+                            const SizedBox(width: 8),
+                            Text(
+                              'ENTER THE DUNGEON (${selected.name.toUpperCase()})',
+                              style: const TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 2,
+                                color: Colors.white,
+                                shadows: [
+                                  Shadow(blurRadius: 4, color: Colors.black),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -484,13 +492,13 @@ class _DungeonRosterTile extends StatelessWidget {
           onTap: onPressed,
           child: Stack(
             children: [
-              // Single Large 5x Character PNG Portrait
+              // Single Large Character PNG Portrait
               Center(
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 24),
                   child: _CharacterPortrait(
-                    asset: 'assets/images/${character.idleAsset}',
-                    size: 200,
+                    character: character,
+                    size: 160,
                   ),
                 ),
               ),
@@ -586,12 +594,11 @@ class _DungeonHeroShowcase extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Single 5x Hero Preview
           _CharacterPortrait(
-            asset: 'assets/images/${character.idleAsset}',
-            size: 80,
+            character: character,
+            size: 68,
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -599,9 +606,10 @@ class _DungeonHeroShowcase extends StatelessWidget {
               children: [
                 Text(
                   character.name.toUpperCase(),
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     color: Color(0xFFE7D2A4),
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.5,
                   ),
@@ -611,35 +619,37 @@ class _DungeonHeroShowcase extends StatelessWidget {
                   character.description,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Colors.white70, fontSize: 12),
+                  style: const TextStyle(color: Colors.white70, fontSize: 11),
                 ),
               ],
             ),
           ),
           const SizedBox(width: 8),
-          // Dungeon Stats
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _StatBar(
-                label: 'ATK',
-                value: character.attackStat,
-                color: const Color(0xFFD32F2F),
-              ),
-              const SizedBox(height: 3),
-              _StatBar(
-                label: 'SPD',
-                value: character.speedStat,
-                color: const Color(0xFF0288D1),
-              ),
-              const SizedBox(height: 3),
-              _StatBar(
-                label: 'DEF',
-                value: character.defenseStat,
-                color: const Color(0xFF388E3C),
-              ),
-            ],
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _StatBar(
+                  label: 'ATK',
+                  value: character.attackStat,
+                  color: const Color(0xFFD32F2F),
+                ),
+                const SizedBox(height: 3),
+                _StatBar(
+                  label: 'SPD',
+                  value: character.speedStat,
+                  color: const Color(0xFF0288D1),
+                ),
+                const SizedBox(height: 3),
+                _StatBar(
+                  label: 'DEF',
+                  value: character.defenseStat,
+                  color: const Color(0xFF388E3C),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -743,10 +753,10 @@ class CharacterGalleryScreen extends StatelessWidget {
                       child: Row(
                         children: [
                           _CharacterPortrait(
-                            asset: 'assets/images/${character.idleAsset}',
-                            size: 96,
+                            character: character,
+                            size: 80,
                           ),
-                          const SizedBox(width: 14),
+                          const SizedBox(width: 12),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -756,7 +766,7 @@ class CharacterGalleryScreen extends StatelessWidget {
                                   style: TextStyle(
                                     color: character.accentColor,
                                     fontWeight: FontWeight.w900,
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     fontStyle: FontStyle.italic,
                                   ),
                                 ),
@@ -771,27 +781,31 @@ class CharacterGalleryScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              _StatBar(
-                                label: 'ATK',
-                                value: character.attackStat,
-                                color: Colors.redAccent,
-                              ),
-                              const SizedBox(height: 3),
-                              _StatBar(
-                                label: 'SPD',
-                                value: character.speedStat,
-                                color: Colors.lightBlueAccent,
-                              ),
-                              const SizedBox(height: 3),
-                              _StatBar(
-                                label: 'DEF',
-                                value: character.defenseStat,
-                                color: Colors.lightGreenAccent,
-                              ),
-                            ],
+                          const SizedBox(width: 8),
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                _StatBar(
+                                  label: 'ATK',
+                                  value: character.attackStat,
+                                  color: Colors.redAccent,
+                                ),
+                                const SizedBox(height: 3),
+                                _StatBar(
+                                  label: 'SPD',
+                                  value: character.speedStat,
+                                  color: Colors.lightBlueAccent,
+                                ),
+                                const SizedBox(height: 3),
+                                _StatBar(
+                                  label: 'DEF',
+                                  value: character.defenseStat,
+                                  color: Colors.lightGreenAccent,
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -809,15 +823,20 @@ class CharacterGalleryScreen extends StatelessWidget {
 
 class _CharacterPortrait extends StatelessWidget {
   const _CharacterPortrait({
-    required this.asset,
+    required this.character,
     required this.size,
   });
 
-  final String asset;
+  final PlayableCharacter character;
   final double size;
 
   @override
   Widget build(BuildContext context) {
+    final frameCount = character.idleFrames;
+    final texW = character.textureWidth.toDouble();
+    final texH = character.textureHeight.toDouble();
+    final totalW = texW * frameCount;
+
     return SizedBox(
       width: size,
       height: size,
@@ -826,12 +845,12 @@ class _CharacterPortrait extends StatelessWidget {
         child: ClipRect(
           child: Align(
             alignment: Alignment.topLeft,
-            widthFactor: 1 / 6,
+            widthFactor: 1 / frameCount,
             heightFactor: 1.0,
             child: Image.asset(
-              asset,
-              width: 600,
-              height: 100,
+              'assets/images/${character.idleAsset}',
+              width: totalW,
+              height: texH,
               filterQuality: FilterQuality.none,
             ),
           ),
@@ -848,40 +867,411 @@ class SettingsDialog extends StatefulWidget {
   State<SettingsDialog> createState() => _SettingsDialogState();
 }
 
-class _SettingsDialogState extends State<SettingsDialog> {
-  double _volume = 0.7;
-  bool _showHints = true;
+class _SettingsDialogState extends State<SettingsDialog>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  late GameSettings _workingSettings;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 4, vsync: this);
+    _workingSettings = GameSettingsController.instance.value;
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  void _applyAndSave() {
+    GameSettingsController.instance.update(_workingSettings);
+    Navigator.of(context).pop();
+  }
+
+  void _resetDefaults() {
+    setState(() {
+      _workingSettings = const GameSettings();
+    });
+    GameSettingsController.instance.resetToDefaults();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('SETTINGS'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.volume_up_outlined),
-              Expanded(
-                child: Slider(
-                  value: _volume,
-                  onChanged: (value) => setState(() => _volume = value),
+    final media = MediaQuery.of(context).size;
+    final dialogWidth = (media.width * 0.92).clamp(280.0, 520.0);
+    final dialogHeight = (media.height * 0.88).clamp(340.0, 580.0);
+
+    return Dialog(
+      backgroundColor: const Color(0xFF1C1510),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: const BorderSide(color: Color(0xFFE7D2A4), width: 1.5),
+      ),
+      child: Container(
+        width: dialogWidth,
+        height: dialogHeight,
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            // Header
+            Row(
+              children: [
+                const Icon(
+                  Icons.settings_suggest_rounded,
+                  color: Color(0xFFE7D2A4),
+                  size: 24,
+                ),
+                const SizedBox(width: 8),
+                const Expanded(
+                  child: Text(
+                    'GAME SETTINGS',
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Color(0xFFE7D2A4),
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.close, color: Colors.white70),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+
+            // Tab Navigation (Scrollable on small screens)
+            TabBar(
+              controller: _tabController,
+              indicatorColor: const Color(0xFFE7D2A4),
+              labelColor: const Color(0xFFE7D2A4),
+              unselectedLabelColor: Colors.white54,
+              isScrollable: media.width < 450,
+              labelStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 11,
+              ),
+              tabs: const [
+                Tab(icon: Icon(Icons.tune_rounded, size: 18), text: 'CONTROLS'),
+                Tab(icon: Icon(Icons.wb_sunny_outlined, size: 18), text: 'DISPLAY'),
+                Tab(icon: Icon(Icons.volume_up_outlined, size: 18), text: 'AUDIO'),
+                Tab(icon: Icon(Icons.sports_esports_outlined, size: 18), text: 'GAMEPLAY'),
+              ],
+            ),
+            const SizedBox(height: 12),
+
+            // Tab Content
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildControlsTab(),
+                  _buildDisplayTab(),
+                  _buildAudioTab(),
+                  _buildGameplayTab(),
+                ],
+              ),
+            ),
+            const SizedBox(height: 8),
+
+            // Footer Actions
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton.icon(
+                  onPressed: _resetDefaults,
+                  icon: const Icon(Icons.restart_alt_rounded, color: Colors.white54, size: 18),
+                  label: const Text(
+                    'RESET',
+                    style: TextStyle(color: Colors.white54, fontSize: 11),
+                  ),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF8F351F),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6),
+                      side: const BorderSide(color: Color(0xFFE7D2A4)),
+                    ),
+                  ),
+                  onPressed: _applyAndSave,
+                  child: const Text('SAVE & CLOSE', style: TextStyle(fontSize: 12)),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildControlsTab() {
+    return ListView(
+      children: [
+        _buildSliderTile(
+          title: 'JOYSTICK SENSITIVITY',
+          subtitle: 'Adjust movement speed and responsiveness multiplier',
+          icon: Icons.speed_rounded,
+          value: _workingSettings.joystickSensitivity,
+          min: 0.5,
+          max: 2.0,
+          divisions: 15,
+          valueLabel: '${_workingSettings.joystickSensitivity.toStringAsFixed(1)}x',
+          onChanged: (val) {
+            setState(() {
+              _workingSettings = _workingSettings.copyWith(joystickSensitivity: val);
+            });
+          },
+        ),
+        const Divider(color: Colors.white12, height: 20),
+        SwitchListTile(
+          contentPadding: EdgeInsets.zero,
+          secondary: const Icon(Icons.touch_app_outlined, color: Color(0xFFE7D2A4)),
+          title: const Text(
+            'ON-SCREEN JOYSTICK',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+          ),
+          subtitle: const Text(
+            'Show virtual touch movement controls on screen',
+            style: TextStyle(color: Colors.white70, fontSize: 11),
+          ),
+          activeThumbColor: const Color(0xFFE7D2A4),
+          value: _workingSettings.showVirtualJoystick,
+          onChanged: (val) {
+            setState(() {
+              _workingSettings = _workingSettings.copyWith(showVirtualJoystick: val);
+            });
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDisplayTab() {
+    return ListView(
+      children: [
+        _buildSliderTile(
+          title: 'DUNGEON BRIGHTNESS',
+          subtitle: 'Adjust ambient lighting level in dark dungeon corridors',
+          icon: Icons.wb_sunny_rounded,
+          value: _workingSettings.brightness,
+          min: 0.1,
+          max: 1.0,
+          divisions: 18,
+          valueLabel: '${(_workingSettings.brightness * 100).round()}%',
+          onChanged: (val) {
+            setState(() {
+              _workingSettings = _workingSettings.copyWith(brightness: val);
+            });
+          },
+        ),
+        const Divider(color: Colors.white12, height: 20),
+        _buildSliderTile(
+          title: 'CAMERA ZOOM',
+          subtitle: 'Adjust field of view distance to hero character',
+          icon: Icons.zoom_in_rounded,
+          value: _workingSettings.cameraZoom,
+          min: 0.8,
+          max: 1.5,
+          divisions: 7,
+          valueLabel: '${_workingSettings.cameraZoom.toStringAsFixed(1)}x',
+          onChanged: (val) {
+            setState(() {
+              _workingSettings = _workingSettings.copyWith(cameraZoom: val);
+            });
+          },
+        ),
+        const Divider(color: Colors.white12, height: 20),
+        const Text(
+          'VISUAL STYLE PRESET',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+        ),
+        const SizedBox(height: 6),
+        Wrap(
+          spacing: 8,
+          runSpacing: 6,
+          children: ['Normal', 'Moody Dark', 'Sepia Vintage', 'High Contrast'].map((preset) {
+            final isSelected = _workingSettings.visualPreset == preset;
+            return ChoiceChip(
+              label: Text(preset),
+              selected: isSelected,
+              selectedColor: const Color(0xFF8F351F),
+              backgroundColor: const Color(0xFF2A2017),
+              labelStyle: TextStyle(
+                color: isSelected ? const Color(0xFFE7D2A4) : Colors.white70,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                fontSize: 11,
+              ),
+              onSelected: (selected) {
+                if (selected) {
+                  setState(() {
+                    _workingSettings = _workingSettings.copyWith(visualPreset: preset);
+                  });
+                }
+              },
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAudioTab() {
+    return ListView(
+      children: [
+        _buildSliderTile(
+          title: 'MASTER VOLUME',
+          subtitle: 'Overall game audio and ambient sound volume',
+          icon: Icons.volume_up_rounded,
+          value: _workingSettings.masterVolume,
+          min: 0.0,
+          max: 1.0,
+          divisions: 20,
+          valueLabel: '${(_workingSettings.masterVolume * 100).round()}%',
+          onChanged: (val) {
+            setState(() {
+              _workingSettings = _workingSettings.copyWith(masterVolume: val);
+            });
+          },
+        ),
+        const Divider(color: Colors.white12, height: 20),
+        _buildSliderTile(
+          title: 'SOUND EFFECTS (SFX)',
+          subtitle: 'Combat, step, and trap sound volume',
+          icon: Icons.graphic_eq_rounded,
+          value: _workingSettings.sfxVolume,
+          min: 0.0,
+          max: 1.0,
+          divisions: 20,
+          valueLabel: '${(_workingSettings.sfxVolume * 100).round()}%',
+          onChanged: (val) {
+            setState(() {
+              _workingSettings = _workingSettings.copyWith(sfxVolume: val);
+            });
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGameplayTab() {
+    return ListView(
+      children: [
+        SwitchListTile(
+          contentPadding: EdgeInsets.zero,
+          secondary: const Icon(Icons.lightbulb_outline_rounded, color: Color(0xFFE7D2A4)),
+          title: const Text(
+            'SHOW HINTS & TIPS',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+          ),
+          subtitle: const Text(
+            'Display helpful controls and dungeon survival tips during gameplay',
+            style: TextStyle(color: Colors.white70, fontSize: 11),
+          ),
+          activeThumbColor: const Color(0xFFE7D2A4),
+          value: _workingSettings.showHints,
+          onChanged: (val) {
+            setState(() {
+              _workingSettings = _workingSettings.copyWith(showHints: val);
+            });
+          },
+        ),
+        const Divider(color: Colors.white12, height: 20),
+        SwitchListTile(
+          contentPadding: EdgeInsets.zero,
+          secondary: const Icon(Icons.monitor_heart_outlined, color: Color(0xFFE7D2A4)),
+          title: const Text(
+            'PERFORMANCE & FPS COUNTER',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+          ),
+          subtitle: const Text(
+            'Display real-time frame rate (FPS) overlay in game window',
+            style: TextStyle(color: Colors.white70, fontSize: 11),
+          ),
+          activeThumbColor: const Color(0xFFE7D2A4),
+          value: _workingSettings.showFps,
+          onChanged: (val) {
+            setState(() {
+              _workingSettings = _workingSettings.copyWith(showFps: val);
+            });
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSliderTile({
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required double value,
+    required double min,
+    required double max,
+    required int divisions,
+    required String valueLabel,
+    required ValueChanged<double> onChanged,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(icon, color: const Color(0xFFE7D2A4), size: 18),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                title,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
                 ),
               ),
-            ],
+            ),
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              decoration: BoxDecoration(
+                color: const Color(0xFF3D2C1E),
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: const Color(0xFFE7D2A4)),
+              ),
+              child: Text(
+                valueLabel,
+                style: const TextStyle(
+                  color: Color(0xFFE7D2A4),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 11,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 2),
+        Text(
+          subtitle,
+          style: const TextStyle(color: Colors.white70, fontSize: 11),
+        ),
+        SliderTheme(
+          data: SliderTheme.of(context).copyWith(
+            activeTrackColor: const Color(0xFF8F351F),
+            inactiveTrackColor: Colors.white12,
+            thumbColor: const Color(0xFFE7D2A4),
+            overlayColor: const Color(0xFFE7D2A4).withValues(alpha: 0.2),
           ),
-          SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            title: const Text('Show hints'),
-            value: _showHints,
-            onChanged: (value) => setState(() => _showHints = value),
+          child: Slider(
+            value: value.clamp(min, max),
+            min: min,
+            max: max,
+            divisions: divisions,
+            onChanged: onChanged,
           ),
-        ],
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('DONE'),
         ),
       ],
     );
@@ -1032,11 +1422,95 @@ class GamePage extends StatefulWidget {
 
 class _GamePageState extends State<GamePage> {
   late int _levelIndex = widget.levelIndex;
+  late double _currentLife = 100;
+  late double _maxLife = 100;
+  bool _isDead = false;
+  int _gameKeyCounter = 0;
 
   void _nextLevel() {
     setState(() {
       _levelIndex = (_levelIndex + 1) % _levels.length;
+      _isDead = false;
+      _currentLife = 100;
+      _gameKeyCounter++;
     });
+  }
+
+  void _restartLevel() {
+    setState(() {
+      _isDead = false;
+      _currentLife = 100;
+      _gameKeyCounter++;
+    });
+  }
+
+  void _handleDeath() {
+    if (_isDead) return;
+    setState(() {
+      _isDead = true;
+    });
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF1C1510),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: const BorderSide(color: Color(0xFFD32F2F), width: 2),
+        ),
+        title: const Text(
+          'YOU DIED',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Color(0xFFD32F2F),
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 4,
+          ),
+        ),
+        content: Text(
+          '${widget.character.name} fell in ${_levels[_levelIndex].name}.',
+          textAlign: TextAlign.center,
+          style: const TextStyle(color: Colors.white70),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _quitToMenuWithoutConfirm();
+            },
+            child: const Text('MAIN MENU', style: TextStyle(color: Colors.white70)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF8F351F),
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+              _restartLevel();
+            },
+            child: const Text('TRY AGAIN'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _openInGameSettings() {
+    showDialog<void>(
+      context: context,
+      builder: (context) => const SettingsDialog(),
+    );
+  }
+
+  void _quitToMenuWithoutConfirm() {
+    if (mounted) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute<void>(builder: (_) => const StartScreen()),
+        (_) => false,
+      );
+    }
   }
 
   Future<void> _quitToMenu() async {
@@ -1059,10 +1533,33 @@ class _GamePageState extends State<GamePage> {
     );
 
     if (shouldQuit == true && mounted) {
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute<void>(builder: (_) => const StartScreen()),
-        (_) => false,
-      );
+      _quitToMenuWithoutConfirm();
+    }
+  }
+
+  ColorFilter _getVisualColorFilter(String preset) {
+    switch (preset) {
+      case 'Moody Dark':
+        return const ColorFilter.mode(
+          Color(0x551B1B3A),
+          BlendMode.darken,
+        );
+      case 'Sepia Vintage':
+        return const ColorFilter.mode(
+          Color(0x55704214),
+          BlendMode.color,
+        );
+      case 'High Contrast':
+        return const ColorFilter.mode(
+          Color(0x22FFFFFF),
+          BlendMode.overlay,
+        );
+      case 'Normal':
+      default:
+        return const ColorFilter.mode(
+          Colors.transparent,
+          BlendMode.dst,
+        );
     }
   }
 
@@ -1070,13 +1567,15 @@ class _GamePageState extends State<GamePage> {
   Widget build(BuildContext context) {
     final level = _levels[_levelIndex];
 
-    return Stack(
-      children: [
-        BonfireWidget(
-          key: ValueKey(_levelIndex),
-          map: level.build(),
-          playerControllers: [
-            Joystick(directional: JoystickDirectional()),
+    return Scaffold(
+      body: ValueListenableBuilder<GameSettings>(
+        valueListenable: GameSettingsController.instance,
+        builder: (context, settings, child) {
+          final controllers = <PlayerController>[];
+          if (settings.showVirtualJoystick) {
+            controllers.add(Joystick(directional: JoystickDirectional()));
+          }
+          controllers.add(
             Keyboard(
               config: KeyboardConfig(
                 directionalKeys: [
@@ -1085,62 +1584,196 @@ class _GamePageState extends State<GamePage> {
                 ],
               ),
             ),
-          ],
-          player: HeroPlayer(
-            position: level.spawnPosition,
-            character: widget.character,
-            tileSize: level.mapTileSize,
-          ),
-          backgroundColor: Colors.black,
-          debugMode: false,
-          showCollisionArea: false,
-          collisionAreaColor: Colors.blue,
-          lightingColorGame: Colors.black.withValues(alpha: 0.4),
-          colorFilter: GameColorFilter(),
-          components: const [],
-          cameraConfig: CameraConfig(
-            zoom: getZoomFromMaxVisibleTile(context, level.mapTileSize, 16),
-            moveOnlyMapArea: true,
-          ),
-          globalForces: GlobalForcesSettings(),
-          onReady: (game) {},
-          autofocus: true,
-        ),
-        SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    IconButton(
-                      onPressed: _quitToMenu,
-                      tooltip: 'Quit to main menu',
-                      color: Colors.white,
-                      icon: const Icon(Icons.exit_to_app_rounded),
-                    ),
-                    Text(
-                      level.name,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        shadows: [Shadow(blurRadius: 4, color: Colors.black)],
-                      ),
-                    ),
-                  ],
-                ),
-                if (_levels.length > 1)
-                  ElevatedButton(
-                    onPressed: _nextLevel,
-                    child: const Text('Next Level'),
+          );
+
+          final brightnessAlpha = (1.0 - settings.brightness).clamp(0.0, 0.88);
+
+          return Stack(
+            children: [
+              ColorFiltered(
+                colorFilter: _getVisualColorFilter(settings.visualPreset),
+                child: ColorFiltered(
+                  colorFilter: ColorFilter.mode(
+                    Colors.black.withValues(alpha: brightnessAlpha),
+                    BlendMode.darken,
                   ),
-              ],
-            ),
-          ),
-        ),
-      ],
+                  child: BonfireWidget(
+                    key: ValueKey('${_levelIndex}_${_gameKeyCounter}_${settings.showVirtualJoystick}'),
+                    map: level.build(),
+                    playerControllers: controllers,
+                    player: HeroPlayer(
+                      position: level.spawnPosition,
+                      character: widget.character,
+                      tileSize: level.mapTileSize,
+                      sensitivity: settings.joystickSensitivity,
+                      onLifeUpdate: (current, max) {
+                        if (mounted) {
+                          setState(() {
+                            _currentLife = current;
+                            _maxLife = max;
+                          });
+                        }
+                      },
+                      onDeath: _handleDeath,
+                    ),
+                    backgroundColor: Colors.black,
+                    debugMode: settings.showFps,
+                    showCollisionArea: false,
+                    collisionAreaColor: Colors.blue,
+                    lightingColorGame: Colors.black.withValues(alpha: 0.2),
+                    colorFilter: GameColorFilter(),
+                    components: const [],
+                    cameraConfig: CameraConfig(
+                      zoom: getZoomFromMaxVisibleTile(context, level.mapTileSize, 16) * settings.cameraZoom,
+                      moveOnlyMapArea: true,
+                    ),
+                    globalForces: GlobalForcesSettings(),
+                    onReady: (game) {},
+                    autofocus: true,
+                  ),
+                ),
+              ),
+              SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: _quitToMenu,
+                                tooltip: 'Quit to main menu',
+                                color: Colors.white,
+                                icon: const Icon(Icons.exit_to_app_rounded),
+                              ),
+                              IconButton(
+                                onPressed: _openInGameSettings,
+                                tooltip: 'Game Settings',
+                                color: const Color(0xFFE7D2A4),
+                                icon: const Icon(Icons.settings_rounded),
+                              ),
+                              const SizedBox(width: 4),
+                              ConstrainedBox(
+                                constraints: const BoxConstraints(maxWidth: 160),
+                                child: Text(
+                                  level.name,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    shadows: [Shadow(blurRadius: 4, color: Colors.black)],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          if (_levels.length > 1)
+                            ElevatedButton(
+                              onPressed: _nextLevel,
+                              child: const Text('Next Level'),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.75),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: const Color(0xFFE7D2A4).withValues(alpha: 0.5)),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.favorite_rounded,
+                                color: _currentLife > 30 ? const Color(0xFFE53935) : Colors.redAccent,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 8),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    widget.character.name.toUpperCase(),
+                                    style: TextStyle(
+                                      color: widget.character.accentColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                      letterSpacing: 1,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  SizedBox(
+                                    width: 120,
+                                    height: 8,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(4),
+                                      child: LinearProgressIndicator(
+                                        value: (_currentLife / _maxLife).clamp(0.0, 1.0),
+                                        backgroundColor: Colors.white12,
+                                        valueColor: AlwaysStoppedAnimation<Color>(
+                                          _currentLife > 30 ? const Color(0xFFE53935) : Colors.red,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                '${_currentLife.toInt()}/${_maxLife.toInt()}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                      if (settings.showHints)
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                          margin: const EdgeInsets.only(bottom: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.82),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: const Color(0xFFE7D2A4).withValues(alpha: 0.6)),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.lightbulb_outline_rounded, color: Color(0xFFE7D2A4), size: 16),
+                              SizedBox(width: 8),
+                              Flexible(
+                                child: Text(
+                                  'WASD/Arrows to move • Space to Attack • ⚙ for Settings',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(color: Colors.white70, fontSize: 11),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }

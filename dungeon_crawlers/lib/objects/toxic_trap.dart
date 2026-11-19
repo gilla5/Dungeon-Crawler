@@ -5,8 +5,8 @@ import 'package:bonfire/map/util/map_assets_manager.dart';
 
 /// Toxic floor trap that activates only while stepped on.
 class ToxicTrap extends GameDecoration with WithSensor<Player> {
-  bool _active = false;
   bool _showActiveSprite = false;
+  double _activeTimer = 0.0;
 
   ToxicTrap({required super.position})
       : super(
@@ -20,7 +20,7 @@ class ToxicTrap extends GameDecoration with WithSensor<Player> {
 
     sensor.setup(interval: 200);
     sensor.onContactListener((player) {
-      _active = true;
+      _activeTimer = 0.35;
       if (!_showActiveSprite) {
         _showActiveSprite = true;
         _setActiveSprite();
@@ -34,13 +34,12 @@ class ToxicTrap extends GameDecoration with WithSensor<Player> {
   @override
   void update(double dt) {
     super.update(dt);
-    if (_active) {
-      _active = false;
-      return;
-    }
     if (_showActiveSprite) {
-      _showActiveSprite = false;
-      _setSafeSprite();
+      _activeTimer -= dt;
+      if (_activeTimer <= 0) {
+        _showActiveSprite = false;
+        _setSafeSprite();
+      }
     }
   }
 
